@@ -1,0 +1,50 @@
+# tomcat
+server:
+  port: 8080
+spring:
+  # Kafka配置
+  kafka:
+    # 集群Broker地址，多个地址用逗号分隔
+    bootstrap-servers: 192.168.92.129:9092,192.168.92.129:9093,192.168.92.129:9094
+    # 生产者配置
+    producer:
+      # 消息键的序列化方式
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # 消息值的序列化方式
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      # 批量发送的批次大小（字节）
+      batch-size: 16384
+      # 缓冲区大小
+      buffer-memory: 33554432
+      # 消息确认机制：all表示等待所有副本确认（最高可靠性，适合生产环境）
+      acks: all
+      # 重试次数
+      retries: 3
+      # 重试间隔（毫秒）
+      retry-backoff-ms: 1000
+    # 消费者配置
+    consumer:
+      # 消息键的反序列化方式
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # 消息值的反序列化方式
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      # 消费者组ID（必须指定，相同组的消费者共同消费分区）
+      group-id: springboot-kafka-group
+      # 自动提交偏移量
+      enable-auto-commit: true
+      # 自动提交偏移量的间隔（毫秒）
+      auto-commit-interval-ms: 1000
+      # 当消费者首次启动时，从分区的最开始消费（earliest/latest/none）
+      auto-offset-reset: earliest
+    # 监听容器配置
+    listener:
+      # 消费模式：BATCH（批量消费）/SINGLE（单条消费）
+      type: SINGLE
+      # 并发消费的线程数（建议不超过集群的分区数）
+      concurrency: 3
+  #redis配置
+  redis:
+    password: 123456
+    database: 0
+    port: 6379
+    host: 192.168.92.129
